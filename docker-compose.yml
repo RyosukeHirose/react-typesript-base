@@ -1,0 +1,14 @@
+version: "3"
+services:
+  react:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lottery_front
+    volumes:
+      - ./www:/www
+    ports:
+      - "3000:3000"
+    # command: sh -c "cd reactapp && npm start"
+    stdin_open: true
+    tty: true
