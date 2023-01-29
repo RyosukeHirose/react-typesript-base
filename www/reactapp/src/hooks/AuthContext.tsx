@@ -39,8 +39,8 @@ interface ProfileData {
 interface authProps {
   user: User | null;
   register: (registerData: RegisterData) => Promise<void>;
-  // signin: (loginData: LoginData) => Promise<void>;
-  // signout: () => Promise<void>;
+  login: (loginData: LoginData) => Promise<void>;
+  logout: () => Promise<void>;
   // saveProfile: (formData: FormData | ProfileData) => Promise<void>;
 }
 
@@ -87,25 +87,25 @@ const useProvideAuth = () => {
     });
   };
 
-  // const signin = async (loginData: LoginData) => {
-  //   try {
-  //     const res = await http.post("/api/login", loginData);
-  //   } catch (error) {
-  //     throw error;
-  //   }
+  const login = async (loginData: LoginData) => {
+    try {
+      const res = await http.post("/api/login", loginData);
+    } catch (error) {
+      throw error;
+    }
 
-  //   return http.get("/api/user").then((res) => {
-  //     setUser(res.data);
-  //   }).catch((error) => {
-  //     setUser(null);
-  //   });
-  // };
+    return http.get("/api/user").then((res) => {
+      setUser(res.data);
+    }).catch((error) => {
+      setUser(null);
+    });
+  };
 
-  // const signout = () => {
-  //   return http.post("/api/logout", {}).then(() => {
-  //     setUser(null);
-  //   });
-  // };
+  const logout = () => {
+    return http.post("/api/logout", {}).then(() => {
+      setUser(null);
+    });
+  };
 
   // const saveProfile = async (formData: FormData | ProfileData) => {
   //   const res = await http.post(
@@ -136,6 +136,8 @@ const useProvideAuth = () => {
   return {
     user,
     register,
+    login,
+    logout,
     // signin,
     // signout,
     // saveProfile,

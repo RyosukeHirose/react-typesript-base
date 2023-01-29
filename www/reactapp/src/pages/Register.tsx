@@ -7,6 +7,9 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const auth = useAuth();
+  const http = useAxios();
+
   const initialFormErrors: FormErrors = {
     name: "",
     email: "",
@@ -14,9 +17,6 @@ const Register = () => {
     passwordConfirmation: "",
   };
   const [formErrors, setFormErrors] = useState<FormErrors>(initialFormErrors);
-
-  const auth = useAuth();
-  const http = useAxios();
 
   const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) =>
     setName(e.target.value);
@@ -72,7 +72,7 @@ const Register = () => {
   };
 
   const isEmail = (email: string) => {
-    let emailRegex = /\S+@\S+\.\S+/;
+    const emailRegex = /\S+@\S+\.\S+/;
     return emailRegex.test(email);
   };
 
