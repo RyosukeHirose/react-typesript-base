@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useAuth } from "../hooks/AuthContext";
-import { useAxios } from "../hooks/Common";
+import { useAuth } from "../../hooks/ShopAuthContext";
+import { useAxios } from "../../hooks/Common";
 
-const Login = () => {
+const ShopLogin = () => {
   interface FormErrors {
     email: string;
     password: string;
@@ -12,7 +12,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const auth = useAuth();
   const http = useAxios();
-
   const initialFormErrors: FormErrors = {
     email: "",
     password: "",
@@ -71,19 +70,6 @@ const Login = () => {
     });
   };
 
-  const logout = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    http.get("/sanctum/csrf-cookie").then(() => {
-      auth?.logout().then(
-        () => {
-          console.log(auth);
-          // history.push("/");
-        },
-      ).catch((error) => {
-        console.log(error);
-      });
-    });
-  };
   return (
     <div>
       <label>email</label>
@@ -97,11 +83,8 @@ const Login = () => {
       <button type="submit" onClick={login}>
         Login
       </button>
-      <button onClick={logout}>
-        ログアウト
-      </button>
     </div>
   );
 };
 
-export default Login;
+export default ShopLogin;

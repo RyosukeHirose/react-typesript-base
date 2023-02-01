@@ -1,24 +1,49 @@
 import React from "react";
 import logo from "./logo.svg";
 import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
-import Login from "./pages/Login";
-import Top from "./pages/Top";
-import Register from "./pages/Register";
-import ProvideAuth, { PrivateRoute, PublicRoute } from "./hooks/AuthContext";
+import UserLogin from "./pages/User/Login";
+import ShopLogin from "./pages/Shop/Login";
+import ShopTop from "./pages/Shop/Top";
+import UserTop from "./pages/User/Top";
+import UserRegister from "./pages/User/Register";
+import ShopRegister from "./pages/Shop/Register";
+import ProvideUserAuth, {
+  // PrivateRoute,
+  UserPublicRoute,
+} from "./hooks/UserAuthContext";
+import ProvidShoprAuth, {
+  // PrivateRoute,
+  ShopPublicRoute,
+} from "./hooks/ShopAuthContext";
 
 import "./App.css";
 
 function App() {
   return (
-    <ProvideAuth>
-      <BrowserRouter>
-        <Switch>
-          <Route path={`/`} exact component={Top} />
-          <Route path={`/login`} exact component={Login} />
-          <Route path={`/register`} exact component={Register} />
-        </Switch>
-      </BrowserRouter>
-    </ProvideAuth>
+    <ProvideUserAuth>
+      <ProvidShoprAuth>
+        <BrowserRouter>
+          <Switch>
+            <Route path={`/user`} exact component={UserTop} />
+            <UserPublicRoute path={`/user/login`} exact>
+              <UserLogin />
+            </UserPublicRoute>
+            <UserPublicRoute path={`/user/register`} exact>
+              <UserRegister />
+            </UserPublicRoute>
+
+            <Route path={`/shop`} exact component={ShopTop} />
+
+            <ShopPublicRoute path={`/shop/login`} exact>
+              <ShopLogin />
+            </ShopPublicRoute>
+            <ShopPublicRoute path={`/shop/register`} exact>
+              <ShopRegister />
+            </ShopPublicRoute>
+          </Switch>
+        </BrowserRouter>
+      </ProvidShoprAuth>
+    </ProvideUserAuth>
   );
 }
 

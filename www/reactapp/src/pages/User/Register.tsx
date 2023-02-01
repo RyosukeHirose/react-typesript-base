@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useAuth } from "../hooks/AuthContext";
-import { useAxios } from "../hooks/Common";
+import { useAuth } from "../../hooks/UserAuthContext";
+import { useAxios } from "../../hooks/Common";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -9,7 +9,6 @@ const Register = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const auth = useAuth();
   const http = useAxios();
-
   const initialFormErrors: FormErrors = {
     name: "",
     email: "",
@@ -107,7 +106,7 @@ const Register = () => {
 
   return (
     <div>
-      <label>企業名</label>
+      <label>名前</label>
       {formErrors.name && <span>{formErrors.name}</span>}
       <input type="text" value={name} onChange={onChangeName} />
 

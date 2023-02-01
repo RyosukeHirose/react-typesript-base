@@ -1,4 +1,4 @@
-import { useAxios } from "../hooks/Common";
+import { useAxios } from "./Common";
 import React, {
   createContext,
   ReactNode,
@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { Redirect, Route, useHistory } from "react-router-dom";
 
-interface User {
+interface Shop {
   id: number;
   name: string;
   email: string;
@@ -37,7 +37,7 @@ interface ProfileData {
 }
 
 interface authProps {
-  user: User | null;
+  shop: Shop | null;
   register: (registerData: RegisterData) => Promise<void>;
   login: (loginData: LoginData) => Promise<void>;
   logout: () => Promise<void>;
@@ -76,34 +76,36 @@ export const useAuth = () => {
 };
 
 const useProvideAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [shop, setShop] = useState<Shop | null>(null);
   const http = useAxios();
 
   const register = (registerData: RegisterData) => {
-    return http.post("/api/register", registerData).then((res) => {
+    return http.post("/api/shop/register", registerData).then((res) => {
       http.get("api/user").then((res) => {
-        setUser(res.data);
+        setShop(res.data);
       });
+    }).catch((error) => {
+      console.error(error);
     });
   };
 
   const login = async (loginData: LoginData) => {
     try {
-      const res = await http.post("/api/login", loginData);
+      const res = await http.post("/api/shop/login", loginData);
     } catch (error) {
       throw error;
     }
 
-    return http.get("/api/user").then((res) => {
-      setUser(res.data);
+    return http.get("/api/shop").then((res) => {
+      setShop(res.data);
     }).catch((error) => {
-      setUser(null);
+      setShop(null);
     });
   };
 
   const logout = () => {
-    return http.post("/api/logout", {}).then(() => {
-      setUser(null);
+    return http.post("/api/shop/logout", {}).then(() => {
+      setShop(null);
     });
   };
 
@@ -118,23 +120,23 @@ const useProvideAuth = () => {
   //     });
   //   if (res?.status == 200) {
   //     return http.get("/api/user").then((res) => {
-  //       setUser(res.data);
+  //       setShop(res.data);
   //     }).catch((error) => {
-  //       setUser(null);
+  //       setShop(null);
   //     });
   //   }
   // };
 
   useEffect(() => {
-    http.get("/api/user").then((res) => {
-      setUser(res.data);
+    http.get("/api/shop").then((res) => {
+      setShop(res.data);
     }).catch((error) => {
-      setUser(null);
+      setShop(null);
     });
   }, []);
 
   return {
-    user,
+    shop,
     register,
     login,
     logout,
@@ -157,7 +159,7 @@ export const PrivateRoute = ({ children, path, exact = false }: RouteProps) => {
       path={path}
       exact={exact}
       render={({ location }) => {
-        if (auth?.user == null) {
+        if (auth?.shop == null) {
           return (
             <Redirect to={{ pathname: "/login", state: { from: location } }} />
           );
@@ -172,7 +174,9 @@ export const PrivateRoute = ({ children, path, exact = false }: RouteProps) => {
 /**
  * 認証していない場合のみアクセス可能（ログイン画面など）
  */
-export const PublicRoute = ({ children, path, exact = false }: RouteProps) => {
+export const ShopPublicRoute = (
+  { children, path, exact = false }: RouteProps,
+) => {
   const auth = useAuth();
   const history = useHistory();
 
@@ -181,7 +185,7 @@ export const PublicRoute = ({ children, path, exact = false }: RouteProps) => {
       path={path}
       exact={exact}
       render={({ location }) => {
-        if (auth?.user == null) {
+        if (auth?.shop == null) {
           return children;
         } else {
           return (
@@ -189,7 +193,7 @@ export const PublicRoute = ({ children, path, exact = false }: RouteProps) => {
               to={{
                 pathname: (history.location.state as From)
                   ? (history.location.state as From).from.pathname
-                  : "/",
+                  : "/shop",
                 state: { from: location },
               }}
             />
